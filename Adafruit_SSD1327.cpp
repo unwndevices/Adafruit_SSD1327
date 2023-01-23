@@ -148,64 +148,69 @@ Adafruit_SSD1327::~Adafruit_SSD1327(void) {}
 */
 bool Adafruit_SSD1327::begin(uint8_t addr, bool reset) {
 
-  if (!Adafruit_GrayOLED::_init(addr, reset)) {
-    return false;
-  }
+        if (!Adafruit_GrayOLED::_init(addr, reset))
+        {
+                return false;
+        }
 
-  /*
-  drawBitmap((WIDTH - splash2_width) / 2, (HEIGHT - splash2_height) / 2,
-             splash2_data, splash2_width, splash2_height, 1);
-             */
+        /*
+        drawBitmap((WIDTH - splash2_width) / 2, (HEIGHT - splash2_height) / 2,
+                   splash2_data, splash2_width, splash2_height, 1);
+                   */
 
-  // Init sequence, make sure its under 32 bytes, or split into multiples!
-  static const uint8_t init_128x128[] = {
-      // Init sequence for 128x32 OLED module
-      SSD1327_DISPLAYOFF, // 0xAE
-      SSD1327_SETCONTRAST,
-      0x80,             // 0x81, 0x80
-      SSD1327_SEGREMAP, // 0xA0 0x53
-      0x51, // remap memory, odd even columns, com flip and column swap
-      SSD1327_SETSTARTLINE,
-      0x00, // 0xA1, 0x00
-      SSD1327_SETDISPLAYOFFSET,
-      0x00, // 0xA2, 0x00
-      SSD1327_DISPLAYALLOFF, SSD1327_SETMULTIPLEX,
-      0x7F, // 0xA8, 0x7F (1/64)
-      SSD1327_PHASELEN,
-      0x11, // 0xB1, 0x11
-      /*
-      SSD1327_GRAYTABLE,
-      0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-      0x07, 0x08, 0x10, 0x18, 0x20, 0x2f, 0x38, 0x3f,
-      */
-      SSD1327_DCLK,
-      0x00, // 0xb3, 0x00 (100hz)
-      SSD1327_REGULATOR,
-      0x01, // 0xAB, 0x01
-      SSD1327_PRECHARGE2,
-      0x04, // 0xB6, 0x04
-      SSD1327_SETVCOM,
-      0x0F, // 0xBE, 0x0F
-      SSD1327_PRECHARGE,
-      0x08, // 0xBC, 0x08
-      SSD1327_FUNCSELB,
-      0x62, // 0xD5, 0x62
-      SSD1327_CMDLOCK,
-      0x12, // 0xFD, 0x12
-      SSD1327_NORMALDISPLAY, SSD1327_DISPLAYON};
+        // Init sequence, make sure its under 32 bytes, or split into multiples!
+        static const uint8_t init_128x128[] = {
+            // Init sequence for 128x32 OLED module
+            SSD1327_DISPLAYOFF, // 0xAE
+            SSD1327_SETCONTRAST,
+            0x80,             // 0x81, 0x80
+            SSD1327_SEGREMAP, // 0xA0 0x53
+            0x51,             // remap memory, odd even columns, com flip and column swap
+            SSD1327_SETSTARTLINE,
+            0x00, // 0xA1, 0x00
+            SSD1327_SETDISPLAYOFFSET,
+            0x00, // 0xA2, 0x00
+            SSD1327_DISPLAYALLOFF, SSD1327_SETMULTIPLEX,
+            0x7F, // 0xA8, 0x7F (1/64)
+            SSD1327_PHASELEN,
+            0x17, // 0xB1, 0x11
+            0xb9, // linear lookup
 
-  page_offset = 0;
-  if (!oled_commandList(init_128x128, sizeof(init_128x128))) {
-    return false;
-  }
+            /*
+            SSD1327_GRAYTABLE,
+            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+            0x07, 0x08, 0x10, 0x18, 0x20, 0x2f, 0x38, 0x3f,
+            */
+            SSD1327_DCLK,
+            0x00, // 0xb3, 0x00 (100hz)
+            SSD1327_REGULATOR,
+            0x01, // 0xAB, 0x01
+            SSD1327_PRECHARGE2,
+            0x04, // 0xB6, 0x04
+            SSD1327_SETVCOM,
+            0x0f, // 0xBE, 0x0F
+            SSD1327_PRECHARGE,
+            0x08, // 0xBC, 0x08
+            SSD1327_FUNCSELB,
+            0x62,       // 0xD5, 0x62
+            0xb5, 0x03, // fix
+            SSD1327_CMDLOCK,
+            0x12, // 0xFD, 0x12
+            SSD1327_NORMALDISPLAY};
 
-  delay(100);                      // 100ms delay recommended
-  oled_command(SSD1327_DISPLAYON); // 0xaf
-  setContrast(0x2F);
+        page_offset = 0;
+        if (!oled_commandList(init_128x128, sizeof(init_128x128)))
+        {
+                return false;
+        }
 
-  // memset(buffer, 0x81, _bpp * WIDTH * ((HEIGHT + 7) / 8));
+        delay(100);                      // 100ms delay recommended
+        oled_command(SSD1327_DISPLAYON); // 0xaf
+        setContrast(0x5f);
 
-  return true; // Success
+        // memset(buffer, 0x81, _bpp * WIDTH * ((HEIGHT + 7) / 8));
+
+        return true; // Success
 }
 
 /*!
