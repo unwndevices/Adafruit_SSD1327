@@ -173,7 +173,7 @@ bool Adafruit_SSD1327::begin(uint8_t addr, bool reset) {
             SSD1327_DISPLAYALLOFF, SSD1327_SETMULTIPLEX,
             0x7F, // 0xA8, 0x7F (1/64)
             SSD1327_PHASELEN,
-            0x17, // 0xB1, 0x11
+            0x11, // 0xB1, 0x11
             0xb9, // linear lookup
 
             /*
@@ -182,13 +182,13 @@ bool Adafruit_SSD1327::begin(uint8_t addr, bool reset) {
             0x07, 0x08, 0x10, 0x18, 0x20, 0x2f, 0x38, 0x3f,
             */
             SSD1327_DCLK,
-            0x00, // 0xb3, 0x00 (100hz)
+            0x01, // 0xb3, 0x00 (100hz)
             SSD1327_REGULATOR,
             0x01, // 0xAB, 0x01
             SSD1327_PRECHARGE2,
-            0x04, // 0xB6, 0x04
+            0x01, // 0xB6, 0x04
             SSD1327_SETVCOM,
-            0x0f, // 0xBE, 0x0F
+            0x07, // 0xBE, 0x0F
             SSD1327_PRECHARGE,
             0x08, // 0xBC, 0x08
             SSD1327_FUNCSELB,
@@ -206,7 +206,7 @@ bool Adafruit_SSD1327::begin(uint8_t addr, bool reset) {
 
         delay(100);                      // 100ms delay recommended
         oled_command(SSD1327_DISPLAYON); // 0xaf
-        setContrast(0x5f);
+        setContrast(0x7f);
 
         // memset(buffer, 0x81, _bpp * WIDTH * ((HEIGHT + 7) / 8));
 
